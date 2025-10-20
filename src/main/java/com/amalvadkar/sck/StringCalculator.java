@@ -14,6 +14,8 @@ public class StringCalculator {
     public static final String COMMA = ",";
     public static final String DECIMAL_DOT = ".";
     public static final String NEW_LINE = "\n";
+    public static final List<String> PREDEFINED_REGEX_KEYWORDS = List.of("|");
+    public static final String CUSTOM_SEPARATOR_INDICATOR = "//";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
@@ -23,18 +25,32 @@ public class StringCalculator {
     }
 
     private static String[] split(String numbers) {
-        if (numbers.startsWith("//")) {
-            List<String> customSeparatorWithNumbers = numbers.lines()
-                    .toList();
-            String customSeparator = customSeparatorWithNumbers.getFirst().substring(2);
-            String actualNumbers = customSeparatorWithNumbers.getLast();
-            return actualNumbers.split(handlePredefinedRegexKeyword(customSeparator));
+        if (hasCustomSeparator(numbers)) {
+            return splitWithCustomSeparator(numbers);
         }
+        return splitWithAllowedSeparators(numbers);
+    }
+
+    private static String[] splitWithAllowedSeparators(String numbers) {
         return replaceNewLineSeparatorWithComma(numbers).split(COMMA);
     }
 
+    private static String[] splitWithCustomSeparator(String numbers) {
+        List<String> customSeparatorWithNumbers = numbers.lines()
+                .toList();
+        String customSeparator = customSeparatorWithNumbers.getFirst().substring(2);
+        String actualNumbers = customSeparatorWithNumbers.getLast();
+        return actualNumbers.split(handlePredefinedRegexKeyword(customSeparator));
+    }
+
+    private static boolean hasCustomSeparator(String numbers) {
+        return numbers.startsWith(CUSTOM_SEPARATOR_INDICATOR);
+    }
+
     private static String handlePredefinedRegexKeyword(String customSeparator) {
-        return customSeparator.equals("|") ? "\\|" : customSeparator;
+        return PREDEFINED_REGEX_KEYWORDS.contains(customSeparator) ?
+                "\\" + customSeparator :
+                customSeparator;
     }
 
     private static String replaceNewLineSeparatorWithComma(String numbers) {
