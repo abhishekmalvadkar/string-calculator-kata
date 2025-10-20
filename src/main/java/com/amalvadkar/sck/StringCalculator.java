@@ -1,6 +1,8 @@
 package com.amalvadkar.sck;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.String.join;
@@ -27,7 +29,9 @@ public class StringCalculator {
     }
 
     private static int intSum(String[] numbers) {
-        return parseInt(numbers[0]) + parseInt(numbers[1]);
+        return Stream.of(numbers)
+                .mapToInt(Integer::parseInt)
+                .sum();
     }
 
     private static BigDecimal decimalSum(String[] numbers) {

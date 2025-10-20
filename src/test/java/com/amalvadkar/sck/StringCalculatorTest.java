@@ -48,4 +48,13 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("2.1,2")).isEqualTo("4.1");
         assertThat(stringCalculator.add("2,3.2")).isEqualTo("5.2");
     }
+
+    @Test
+    void should_return_sum_if_input_is_multiple_int_numbers_separated_by_comma() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("1,2,3")).isEqualTo("6");
+        assertThat(stringCalculator.add("1,2,3,4")).isEqualTo("10");
+        assertThat(stringCalculator.add("10,20,30,40,50")).isEqualTo("150");
+    }
 }
