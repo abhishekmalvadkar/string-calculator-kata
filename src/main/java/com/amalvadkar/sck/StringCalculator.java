@@ -15,12 +15,18 @@ public class StringCalculator {
     private static final String NEW_LINE = "\n";
     private static final List<String> PREDEFINED_REGEX_KEYWORDS = List.of("|");
     private static final String CUSTOM_SEPARATOR_INDICATOR = "//";
+    private static final String NUMBER_EXPECTED_BUT_EOF_FOUND_MSG = "Number expected but EOF found.";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
+        if (endsWithAllowedSepartor(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
 
         return sum(split(numbers));
+    }
+
+    private static boolean endsWithAllowedSepartor(String numbers) {
+        return numbers.endsWith(COMMA) || numbers.endsWith(NEW_LINE);
     }
 
     private static String[] split(String numbers) {

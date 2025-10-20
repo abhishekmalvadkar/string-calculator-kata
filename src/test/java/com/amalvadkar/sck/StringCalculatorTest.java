@@ -80,4 +80,12 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("//|\n1|2|3")).isEqualTo("6");
         assertThat(stringCalculator.add("//sep\n2sep3")).isEqualTo("5");
     }
+
+    @Test
+    void should_return_error_msg_if_input_has_allowed_separator_at_the_end() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("1,3,")).isEqualTo("Number expected but EOF found.");
+        assertThat(stringCalculator.add("1,3\n")).isEqualTo("Number expected but EOF found.");
+    }
 }
