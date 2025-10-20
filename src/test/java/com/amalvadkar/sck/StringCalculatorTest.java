@@ -102,4 +102,12 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("//;\n-1;2")).isEqualTo("Negative not allowed : -1");
         assertThat(stringCalculator.add("//abc\n2abc-4abc-5abc-3")).isEqualTo("Negative not allowed : -4, -5, -3");
     }
+
+    @Test
+    void should_return_error_message_if_input_has_single_or_multiple_decimal_negative_numbers() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("-1.5,2")).isEqualTo("Negative not allowed : -1.5");
+        assertThat(stringCalculator.add("2,-4.5,-5.5,-9")).isEqualTo("Negative not allowed : -4.5, -5.5, -9");
+    }
 }

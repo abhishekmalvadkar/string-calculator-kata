@@ -31,8 +31,8 @@ public class StringCalculator {
     private static String negativeNumbersNotAllowedMsg(String numbers) {
         String[] splitNumbersWithNegativeNumbers = split(numbers);
         String negativeNumbers = Stream.of(splitNumbersWithNegativeNumbers)
-                .map(Integer::parseInt)
-                .filter(integer -> integer < 0)
+                .map(BigDecimal::new)
+                .filter(bigDecimal -> bigDecimal.compareTo(BigDecimal.ZERO) < 0)
                 .map(String::valueOf)
                 .collect(Collectors.joining(", "));
         return NEGATIVE_NOT_ALLOWED_MSG.formatted(negativeNumbers);
