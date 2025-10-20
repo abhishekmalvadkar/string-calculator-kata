@@ -6,6 +6,6 @@ public class StringCalculator {
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
-        return null;
+        return numbers;
     }
 }
