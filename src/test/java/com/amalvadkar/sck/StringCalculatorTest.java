@@ -35,5 +35,8 @@ public class StringCalculatorTest {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.add("1,2")).isEqualTo("3");
+        assertThat(stringCalculator.add("12,2")).isEqualTo("14");
+        assertThat(stringCalculator.add("1,22")).isEqualTo("23");
+        assertThat(stringCalculator.add("10,20")).isEqualTo("30");
     }
 }

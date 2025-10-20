@@ -1,5 +1,8 @@
 package com.amalvadkar.sck;
 
+import static java.lang.Integer.parseInt;
+import static java.lang.String.valueOf;
+
 public class StringCalculator {
 
     public static final String ZERO = "0";
@@ -9,8 +12,11 @@ public class StringCalculator {
         if (numbers.isEmpty()) return ZERO;
         if (hasSingleNumberWithoutComma(numbers)) return numbers;
 
-        String[] numbersAsString = numbers.split(COMMA);
-        return String.valueOf(Integer.parseInt(numbersAsString[0]) + Integer.parseInt(numbersAsString[1]));
+        return valueOf(sum(numbers.split(COMMA)));
+    }
+
+    private static int sum(String[] numbers) {
+        return parseInt(numbers[0]) + parseInt(numbers[1]);
     }
 
     private static boolean hasSingleNumberWithoutComma(String numbers) {
