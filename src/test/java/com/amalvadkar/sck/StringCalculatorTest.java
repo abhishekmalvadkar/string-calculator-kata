@@ -64,4 +64,12 @@ public class StringCalculatorTest {
 
         assertThat(stringCalculator.add("1.1,2.2,3.3")).isEqualTo("6.6");
     }
+
+    @Test
+    void should_allow_new_line_as_separator_as_well() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("1\n2,3")).isEqualTo("6");
+        assertThat(stringCalculator.add("1\n2\n3\n4")).isEqualTo("10");
+    }
 }

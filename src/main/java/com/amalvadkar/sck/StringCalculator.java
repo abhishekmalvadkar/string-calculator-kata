@@ -1,7 +1,6 @@
 package com.amalvadkar.sck;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static java.lang.Integer.parseInt;
@@ -13,12 +12,22 @@ public class StringCalculator {
     public static final String ZERO = "0";
     public static final String COMMA = ",";
     public static final String DOT = ".";
+    public static final String LINE_BREAK = "\n";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
-        if (hasSingleNumberWithoutComma(numbers)) return numbers;
+        if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
 
-        return sum(numbers.split(COMMA));
+        return sum(split(numbers));
+    }
+
+    private static String[] split(String numbers) {
+        String commaSeparatorNumbers = replaceCustomSeparatorWithComma(numbers);
+        return commaSeparatorNumbers.split(COMMA);
+    }
+
+    private static String replaceCustomSeparatorWithComma(String numbers) {
+        return numbers.replace(LINE_BREAK, COMMA);
     }
 
     private static String sum(String[] numbers) {
@@ -44,7 +53,7 @@ public class StringCalculator {
         return join(COMMA, numbers).contains(DOT);
     }
 
-    private static boolean hasSingleNumberWithoutComma(String numbers) {
-        return !numbers.contains(COMMA);
+    private static boolean hasSingleNumberWithoutSeparator(String numbers) {
+        return !numbers.contains(COMMA) && !numbers.contains(LINE_BREAK);
     }
 }
