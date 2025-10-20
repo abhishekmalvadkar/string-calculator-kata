@@ -4,18 +4,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.lang.Integer.parseInt;
 import static java.lang.String.join;
 import static java.lang.String.valueOf;
 
 public class StringCalculator {
 
-    public static final String ZERO = "0";
-    public static final String COMMA = ",";
-    public static final String DECIMAL_DOT = ".";
-    public static final String NEW_LINE = "\n";
-    public static final List<String> PREDEFINED_REGEX_KEYWORDS = List.of("|");
-    public static final String CUSTOM_SEPARATOR_INDICATOR = "//";
+    private static final String ZERO = "0";
+    private static final String COMMA = ",";
+    private static final String DECIMAL_DOT = ".";
+    private static final String NEW_LINE = "\n";
+    private static final List<String> PREDEFINED_REGEX_KEYWORDS = List.of("|");
+    private static final String CUSTOM_SEPARATOR_INDICATOR = "//";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
