@@ -38,9 +38,17 @@ public class StringCalculator {
     private static String[] splitWithCustomSeparator(String numbers) {
         List<String> customSeparatorWithNumbers = numbers.lines()
                 .toList();
-        String customSeparator = customSeparatorWithNumbers.getFirst().substring(2);
-        String actualNumbers = customSeparatorWithNumbers.getLast();
+        String customSeparator = extractCustomSeparator(customSeparatorWithNumbers);
+        String actualNumbers = extractActualNumbers(customSeparatorWithNumbers);
         return actualNumbers.split(handlePredefinedRegexKeyword(customSeparator));
+    }
+
+    private static String extractActualNumbers(List<String> customSeparatorWithNumbers) {
+        return customSeparatorWithNumbers.getLast();
+    }
+
+    private static String extractCustomSeparator(List<String> customSeparatorWithNumbers) {
+        return customSeparatorWithNumbers.getFirst().substring(2);
     }
 
     private static boolean hasCustomSeparator(String numbers) {
