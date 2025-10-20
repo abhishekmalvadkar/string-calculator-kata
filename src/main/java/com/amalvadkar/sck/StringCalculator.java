@@ -11,7 +11,7 @@ public class StringCalculator {
 
     public static final String ZERO = "0";
     public static final String COMMA = ",";
-    public static final String DOT = ".";
+    public static final String DECIMAL_DOT = ".";
     public static final String LINE_BREAK = "\n";
 
     public String add(String numbers) {
@@ -22,8 +22,7 @@ public class StringCalculator {
     }
 
     private static String[] split(String numbers) {
-        String commaSeparatorNumbers = replaceCustomSeparatorWithComma(numbers);
-        return commaSeparatorNumbers.split(COMMA);
+        return replaceCustomSeparatorWithComma(numbers).split(COMMA);
     }
 
     private static String replaceCustomSeparatorWithComma(String numbers) {
@@ -50,7 +49,7 @@ public class StringCalculator {
     }
 
     private static boolean hasDecimalNumber(String[] numbers) {
-        return join(COMMA, numbers).contains(DOT);
+        return join(COMMA, numbers).contains(DECIMAL_DOT);
     }
 
     private static boolean hasSingleNumberWithoutSeparator(String numbers) {
