@@ -72,4 +72,13 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("1\n2,3")).isEqualTo("6");
         assertThat(stringCalculator.add("1\n2\n3\n4")).isEqualTo("10");
     }
+
+    @Test
+    void should_allow_custom_separator() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("//;\n1;2")).isEqualTo("3");
+        assertThat(stringCalculator.add("//|\n1|2|3")).isEqualTo("6");
+        assertThat(stringCalculator.add("//sep\n2sep3")).isEqualTo("5");
+    }
 }
