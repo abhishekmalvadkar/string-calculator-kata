@@ -29,4 +29,11 @@ public class StringCalculatorTest {
 
         assertThat(stringCalculator.add(numbers)).isEqualTo(actual);
     }
+
+    @Test
+    void should_return_sum_if_input_is_two_numbers_separated_by_comma() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("1,2")).isEqualTo("3");
+    }
 }
