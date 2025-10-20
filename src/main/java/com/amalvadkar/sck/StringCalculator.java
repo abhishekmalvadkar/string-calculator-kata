@@ -8,7 +8,9 @@ public class StringCalculator {
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
         if (hasSingleNumberWithoutComma(numbers)) return numbers;
-        return numbers;
+
+        String[] numbersAsString = numbers.split(COMMA);
+        return String.valueOf(Integer.parseInt(numbersAsString[0]) + Integer.parseInt(numbersAsString[1]));
     }
 
     private static boolean hasSingleNumberWithoutComma(String numbers) {
