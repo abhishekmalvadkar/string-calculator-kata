@@ -88,4 +88,18 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("1,3,")).isEqualTo("Number expected but EOF found.");
         assertThat(stringCalculator.add("1,3\n")).isEqualTo("Number expected but EOF found.");
     }
+
+    @Test
+    void should_return_error_message_if_input_has_single_or_multiple_negative_numbers() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("-1,2")).isEqualTo("Negative not allowed : -1");
+        assertThat(stringCalculator.add("2,-4,-5")).isEqualTo("Negative not allowed : -4, -5");
+
+        assertThat(stringCalculator.add("-1\n2")).isEqualTo("Negative not allowed : -1");
+        assertThat(stringCalculator.add("2\n-4\n-5,-3")).isEqualTo("Negative not allowed : -4, -5, -3");
+
+        assertThat(stringCalculator.add("//;\n-1;2")).isEqualTo("Negative not allowed : -1");
+        assertThat(stringCalculator.add("//abc\n2abc-4abc-5abc-3")).isEqualTo("Negative not allowed : -4, -5, -3");
+    }
 }

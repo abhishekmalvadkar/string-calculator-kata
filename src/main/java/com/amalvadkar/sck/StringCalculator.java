@@ -2,6 +2,7 @@ package com.amalvadkar.sck;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.join;
@@ -19,13 +20,23 @@ public class StringCalculator {
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
-        if (endsWithAllowedSepartor(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
+        if (endsWithAllowedSeparator(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
+
+        if (numbers.contains("-")) {
+            String[] splitNumbersWithNegativeNumbers = split(numbers);
+            String negativeNumbers = Stream.of(splitNumbersWithNegativeNumbers)
+                    .map(Integer::parseInt)
+                    .filter(integer -> integer < 0)
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(", "));
+            return String.format("Negative not allowed : %s", negativeNumbers);
+        }
 
         return sum(split(numbers));
     }
 
-    private static boolean endsWithAllowedSepartor(String numbers) {
+    private static boolean endsWithAllowedSeparator(String numbers) {
         return numbers.endsWith(COMMA) || numbers.endsWith(NEW_LINE);
     }
 
