@@ -90,7 +90,7 @@ public class StringCalculatorTest {
     }
 
     @Test
-    void should_return_error_message_if_input_has_single_or_multiple_negative_numbers() {
+    void should_return_error_message_if_input_has_single_or_multiple_int_negative_numbers() {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.add("-1,2")).isEqualTo("Negative not allowed : -1");

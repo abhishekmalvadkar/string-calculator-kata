@@ -17,23 +17,29 @@ public class StringCalculator {
     private static final List<String> PREDEFINED_REGEX_KEYWORDS = List.of("|");
     private static final String CUSTOM_SEPARATOR_INDICATOR = "//";
     private static final String NUMBER_EXPECTED_BUT_EOF_FOUND_MSG = "Number expected but EOF found.";
+    private static final String NEGATIVE_NOT_ALLOWED_MSG = "Negative not allowed : %s";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
         if (endsWithAllowedSeparator(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
-
-        if (numbers.contains("-")) {
-            String[] splitNumbersWithNegativeNumbers = split(numbers);
-            String negativeNumbers = Stream.of(splitNumbersWithNegativeNumbers)
-                    .map(Integer::parseInt)
-                    .filter(integer -> integer < 0)
-                    .map(String::valueOf)
-                    .collect(Collectors.joining(", "));
-            return String.format("Negative not allowed : %s", negativeNumbers);
-        }
+        if (hasSingleOrManyNegativeNumber(numbers)) return negativeNumbersNotAllowedMsg(numbers);
 
         return sum(split(numbers));
+    }
+
+    private static String negativeNumbersNotAllowedMsg(String numbers) {
+        String[] splitNumbersWithNegativeNumbers = split(numbers);
+        String negativeNumbers = Stream.of(splitNumbersWithNegativeNumbers)
+                .map(Integer::parseInt)
+                .filter(integer -> integer < 0)
+                .map(String::valueOf)
+                .collect(Collectors.joining(", "));
+        return NEGATIVE_NOT_ALLOWED_MSG.formatted(negativeNumbers);
+    }
+
+    private static boolean hasSingleOrManyNegativeNumber(String numbers) {
+        return numbers.contains("-");
     }
 
     private static boolean endsWithAllowedSeparator(String numbers) {
