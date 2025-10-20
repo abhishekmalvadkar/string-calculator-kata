@@ -39,4 +39,13 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("1,22")).isEqualTo("23");
         assertThat(stringCalculator.add("10,20")).isEqualTo("30");
     }
+
+    @Test
+    void should_return_sum_if_input_is_two_numbers_and_it_involved_decimal_number_separated_by_comma() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("1.1,2.2")).isEqualTo("3.3");
+        assertThat(stringCalculator.add("2.1,2")).isEqualTo("4.1");
+        assertThat(stringCalculator.add("2,3.2")).isEqualTo("5.2");
+    }
 }
