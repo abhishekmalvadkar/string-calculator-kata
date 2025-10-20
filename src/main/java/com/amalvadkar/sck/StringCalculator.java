@@ -3,12 +3,14 @@ package com.amalvadkar.sck;
 import java.math.BigDecimal;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.String.join;
 import static java.lang.String.valueOf;
 
 public class StringCalculator {
 
     public static final String ZERO = "0";
     public static final String COMMA = ",";
+    public static final String DOT = ".";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
@@ -33,7 +35,7 @@ public class StringCalculator {
     }
 
     private static boolean hasDecimalNumber(String[] numbers) {
-        return String.join(COMMA, numbers).contains(".");
+        return join(COMMA, numbers).contains(DOT);
     }
 
     private static boolean hasSingleNumberWithoutComma(String numbers) {
