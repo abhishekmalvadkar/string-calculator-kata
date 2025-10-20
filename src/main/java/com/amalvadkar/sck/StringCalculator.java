@@ -35,7 +35,9 @@ public class StringCalculator {
     }
 
     private static BigDecimal decimalSum(String[] numbers) {
-        return new BigDecimal(numbers[0]).add(new BigDecimal(numbers[1]));
+        return Stream.of(numbers)
+                .map(BigDecimal::new)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private static boolean hasDecimalNumber(String[] numbers) {
