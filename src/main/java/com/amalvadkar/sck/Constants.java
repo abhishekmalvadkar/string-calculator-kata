@@ -3,7 +3,7 @@ package com.amalvadkar.sck;
 import java.util.List;
 
 public class Constants {
-    public static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.','-');
+    public static final List<Character> KNOWN_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.','-');
     public static final List<Character> PREDEFINED_SEPARATORS = List.of(',', '\n');
     public static final String ZERO = "0";
     public static final String COMMA = ",";

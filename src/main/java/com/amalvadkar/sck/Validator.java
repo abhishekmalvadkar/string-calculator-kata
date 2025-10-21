@@ -53,7 +53,7 @@ public class Validator {
                 if (isSeparator(previousCharacter)) {
                     errors.add(String.format(Constants.NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position));
                 }
-            } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
+            } else if (isNotFromKnownCharacterInNumbers(currentCharacter)) {
                 errors.add(String.format(Constants.UNKNOWN_CHARACTER_AT_POSITION_MSG, predefinedSeparators(), currentCharacter, position));
             }
         }
@@ -80,7 +80,7 @@ public class Validator {
                     if (is(customSeparator,previousCharacter)) {
                         errors.add(String.format(Constants.NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position));
                     }
-                } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
+                } else if (isNotFromKnownCharacterInNumbers(currentCharacter)) {
                     errors.add(String.format(Constants.UNKNOWN_CHARACTER_AT_POSITION_MSG, customSeparator, currentCharacter, position));
                 }
             }
@@ -91,8 +91,8 @@ public class Validator {
         return customSeparator.length() == 1;
     }
 
-    private static boolean isNotFromValidAllowedNumbers(Character currentCharacter) {
-        return !Constants.VALID_CHARACTERS_IN_NUMBERS.contains(currentCharacter);
+    private static boolean isNotFromKnownCharacterInNumbers(Character currentCharacter) {
+        return !Constants.KNOWN_CHARACTERS_IN_NUMBERS.contains(currentCharacter);
     }
 
     private static boolean is(String customSeparator, Character currentCharacter) {
