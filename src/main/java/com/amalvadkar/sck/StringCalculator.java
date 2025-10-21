@@ -9,6 +9,7 @@ import static java.util.stream.Collectors.joining;
 
 public class StringCalculator {
 
+    public static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
     private static final String ZERO = "0";
     private static final String COMMA = ",";
     private static final String NEW_LINE = "\n";
@@ -18,6 +19,7 @@ public class StringCalculator {
     private static final String NEGATIVE_NOT_ALLOWED_MSG = "Negative not allowed : %s";
     private static final String MINUS_SYMBOL = "-";
     private static final String COMMA_WITH_SPACE_SUFFIX = ", ";
+    public static final String NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG = "Number expected but '%s' found at position %s.";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
@@ -35,35 +37,45 @@ public class StringCalculator {
 
     private String validate(String numbers) {
         if (hasCustomSeparator(numbers)) {
-            NumbersWithCustomSeparator numbersWithCustomSeparator = prepareNumbersWithCustomSeparator(numbers);
-            return errorMessageIfAnyInvalidInCaseOfCustomSeparator(numbersWithCustomSeparator);
+            return errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers));
         }
         return errorMessageIfAnyInvalid(numbers);
     }
 
     private static String errorMessageIfAnyInvalid(String numbers) {
-        for (int i = 0; i < numbers.length(); i++) {
-            Character currentCharacter = numbers.charAt(i);
-            List<Character> validCharactersInNumbers = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
-            if (!validCharactersInNumbers.contains(currentCharacter)) {
-                if (!validCharactersInNumbers.contains(numbers.charAt(i - 1))) {
-                    return String.format("Number expected but '%s' found at position %s.", currentCharacter, i);
+        for (int position = 0; position < numbers.length(); position++) {
+            Character currentCharacter = numbers.charAt(position);
+            if (isSeparator(currentCharacter)) {
+                Character previousCharacter = numbers.charAt(position - 1);
+                if (isSeparator(previousCharacter)) {
+                    return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
                 }
             }
         }
         return "";
     }
 
+    private static boolean isSeparator(Character currentCharacter) {
+        return !VALID_CHARACTERS_IN_NUMBERS.contains(currentCharacter);
+    }
+
     private static String errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator) {
-        for (int i = 0; i < numbersWithCustomSeparator.actualNumbers.length(); i++) {
-            Character currentCharacter = numbersWithCustomSeparator.actualNumbers.charAt(i);
-            if (numbersWithCustomSeparator.customSeparator.equals(String.valueOf(currentCharacter))) {
-                if (numbersWithCustomSeparator.customSeparator.equals(String.valueOf(numbersWithCustomSeparator.actualNumbers.charAt(i-1)))) {
-                    return String.format("Number expected but '%s' found at position %s.", currentCharacter, i);
+        String actualNumbers = numbersWithCustomSeparator.actualNumbers;
+        String customSeparator = numbersWithCustomSeparator.customSeparator;
+        for (int position = 0; position < actualNumbers.length(); position++) {
+            Character currentCharacter = actualNumbers.charAt(position);
+            if (is(customSeparator, currentCharacter)) {
+                Character previousCharacter = actualNumbers.charAt(position - 1);
+                if (is(customSeparator,previousCharacter)) {
+                    return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
                 }
             }
         }
         return "";
+    }
+
+    private static boolean is(String customSeparator, Character currentCharacter) {
+        return customSeparator.equals(String.valueOf(currentCharacter));
     }
 
     private static String sum(String numbers) {
