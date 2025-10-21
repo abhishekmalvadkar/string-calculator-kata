@@ -116,6 +116,7 @@ public class StringCalculatorTest {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.add("175.2,\n35")).isEqualTo("Number expected but '\n' found at position 6.");
+        assertThat(stringCalculator.add("//;\n175.2;;35")).isEqualTo("Number expected but ';' found at position 6.");
     }
 
     @Test
