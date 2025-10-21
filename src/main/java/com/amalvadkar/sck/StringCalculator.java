@@ -9,8 +9,8 @@ import static java.util.stream.Collectors.joining;
 
 public class StringCalculator {
 
-    public static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
-    public static final List<Character> PREDEFINED_SEPARATORS = List.of(',', '\n');
+    private static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+    private static final List<Character> PREDEFINED_SEPARATORS = List.of(',', '\n');
     private static final String ZERO = "0";
     private static final String COMMA = ",";
     private static final String NEW_LINE = "\n";
@@ -20,8 +20,8 @@ public class StringCalculator {
     private static final String NEGATIVE_NOT_ALLOWED_MSG = "Negative not allowed : %s";
     private static final String MINUS_SYMBOL = "-";
     private static final String COMMA_WITH_SPACE_SUFFIX = ", ";
-    public static final String NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG = "Number expected but '%s' found at position %s.";
-    public static final String UNKNOWN_CHARACTER_AT_POSITION_MSG = "'%s' expected but '%s' found at position %s.";
+    private static final String NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG = "Number expected but '%s' found at position %s.";
+    private static final String UNKNOWN_CHARACTER_AT_POSITION_MSG = "'%s' expected but '%s' found at position %s.";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
@@ -41,10 +41,10 @@ public class StringCalculator {
         if (hasCustomSeparator(numbers)) {
             return errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers));
         }
-        return errorMessageIfAnyInvalid(numbers);
+        return errorMessageIfAnyInvalidInCasePredefinedSeparators(numbers);
     }
 
-    private static String errorMessageIfAnyInvalid(String numbers) {
+    private static String errorMessageIfAnyInvalidInCasePredefinedSeparators(String numbers) {
         for (int position = 0; position < numbers.length(); position++) {
             Character currentCharacter = numbers.charAt(position);
             if (isSeparator(currentCharacter)) {
