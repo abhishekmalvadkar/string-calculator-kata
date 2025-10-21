@@ -2,7 +2,7 @@ package com.amalvadkar.sck;
 
 import java.util.List;
 
-record NumbersWithCustomSeparator(String actualNumbers, String customSeparator) {
+public record NumbersWithCustomSeparator(String actualNumbers, String customSeparator) {
     public static NumbersWithCustomSeparator from(String numbers) {
         List<String> customSeparatorWithNumbers = numbers.lines()
                 .toList();
