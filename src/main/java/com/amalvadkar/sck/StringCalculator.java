@@ -32,9 +32,7 @@ public class StringCalculator {
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
 
         String error = validate(numbers);
-        if (numbersHaveValidation(error)) {
-            return error;
-        }
+        if (numbersHaveValidation(error)) return error;
 
         return sum(numbers);
     }
@@ -46,19 +44,20 @@ public class StringCalculator {
     private String validate(String numbers) {
         List<String> errors = new ArrayList<>();
 
-        if (endsWithAllowedSeparator(numbers)) {
-            numberExpectedButEofFoundMessage(errors);
-        }
-        if (hasSingleOrManyNegativeNumber(numbers)) {
-            negativeNumbersNotAllowedMsg(numbers,errors);
-        }
-        if (hasCustomSeparator(numbers)) {
-            errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator.from(numbers), errors);
-        } else {
-            errorMessageIfAnyInvalidInCaseOfPredefinedSeparators(numbers, errors);
-        }
+        if (endsWithAllowedSeparator(numbers)) updateErrorsWithNumberExpectedButEofFoundMessage(errors);
+        if (hasSingleOrManyNegativeNumber(numbers)) updateErrorsWithNegativeNumbersNotAllowedMessage(numbers, errors);
+
+        updateErrorsWithMessageBasedOnSeparatorType(numbers, errors);
 
         return exists(errors) ? joinedWithNewLine(errors) : EMPTY_STRING;
+    }
+
+    private static void updateErrorsWithMessageBasedOnSeparatorType(String numbers, List<String> errors) {
+        if (hasCustomSeparator(numbers)) {
+            updateErrorsWithMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator.from(numbers), errors);
+        } else {
+            updateErrorsWithMessageIfAnyInvalidInCaseOfPredefinedSeparators(numbers, errors);
+        }
     }
 
     private static String joinedWithNewLine(List<String> errors) {
@@ -69,11 +68,11 @@ public class StringCalculator {
         return !errors.isEmpty();
     }
 
-    private static void numberExpectedButEofFoundMessage(List<String> errors) {
+    private static void updateErrorsWithNumberExpectedButEofFoundMessage(List<String> errors) {
         errors.add(NUMBER_EXPECTED_BUT_EOF_FOUND_MSG);
     }
 
-    private static void errorMessageIfAnyInvalidInCaseOfPredefinedSeparators(String numbers, List<String> errors) {
+    private static void updateErrorsWithMessageIfAnyInvalidInCaseOfPredefinedSeparators(String numbers, List<String> errors) {
         for (int position = 0; position < numbers.length(); position++) {
             Character currentCharacter = numbers.charAt(position);
             if (isSeparator(currentCharacter)) {
@@ -97,7 +96,7 @@ public class StringCalculator {
         return PREDEFINED_SEPARATORS.contains(currentCharacter);
     }
 
-    private static void errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator, List<String> errors) {
+    private static void updateErrorsWithMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator, List<String> errors) {
         String actualNumbers = numbersWithCustomSeparator.actualNumbers();
         String customSeparator = numbersWithCustomSeparator.customSeparator();
         if (hasSingleCharacter(customSeparator)) {
@@ -131,7 +130,7 @@ public class StringCalculator {
         return valueOf(sum(split(numbers)));
     }
 
-    private static void negativeNumbersNotAllowedMsg(String numbers, List<String> errors) {
+    private static void updateErrorsWithNegativeNumbersNotAllowedMessage(String numbers, List<String> errors) {
         errors.add(NEGATIVE_NOT_ALLOWED_MSG.formatted(extractNegativeNumbers(numbers)));
     }
 
