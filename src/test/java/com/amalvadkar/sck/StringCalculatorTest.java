@@ -125,4 +125,11 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("//|\n1|2,3")).isEqualTo("'|' expected but ',' found at position 3.");
         assertThat(stringCalculator.add("1|2,3")).isEqualTo("',OR\n' expected but '|' found at position 1.");
     }
+
+    @Test
+    void should_return_multiple_error_messages_separated_by_new_line_if_many_validation_failed() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative not allowed : -1\nNumber expected but ',' found at position 3.");
+    }
 }

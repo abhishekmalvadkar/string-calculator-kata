@@ -1,15 +1,18 @@
 package com.amalvadkar.sck;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static java.lang.String.join;
 import static java.lang.String.valueOf;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 public class StringCalculator {
 
-    private static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+    private static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.','-');
     private static final List<Character> PREDEFINED_SEPARATORS = List.of(',', '\n');
     private static final String ZERO = "0";
     private static final String COMMA = ",";
@@ -27,36 +30,41 @@ public class StringCalculator {
         if (numbers.isEmpty()) return ZERO;
         if (endsWithAllowedSeparator(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
-        if (hasSingleOrManyNegativeNumber(numbers)) return negativeNumbersNotAllowedMsg(numbers);
 
-        String errorMessage = validate(numbers);
-        if (!errorMessage.isEmpty()) {
-            return errorMessage;
+        List<String> errors = validate(numbers);
+        if (!errors.isEmpty()) {
+            return join(NEW_LINE, errors);
         }
 
         return sum(numbers);
     }
 
-    private String validate(String numbers) {
-        if (hasCustomSeparator(numbers)) {
-            return errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers));
+    private List<String> validate(String numbers) {
+        List<String> errors = new ArrayList<>();
+        if (hasSingleOrManyNegativeNumber(numbers)) {
+            negativeNumbersNotAllowedMsg(numbers,errors);
         }
-        return errorMessageIfAnyInvalidInCasePredefinedSeparators(numbers);
+
+        if (hasCustomSeparator(numbers)) {
+            errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers), errors);
+        } else {
+            errorMessageIfAnyInvalidInCasePredefinedSeparators(numbers, errors);
+        }
+        return errors;
     }
 
-    private static String errorMessageIfAnyInvalidInCasePredefinedSeparators(String numbers) {
+    private static void errorMessageIfAnyInvalidInCasePredefinedSeparators(String numbers, List<String> errors) {
         for (int position = 0; position < numbers.length(); position++) {
             Character currentCharacter = numbers.charAt(position);
             if (isSeparator(currentCharacter)) {
                 Character previousCharacter = numbers.charAt(position - 1);
                 if (isSeparator(previousCharacter)) {
-                    return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
+                    errors.add(String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position));
                 }
             } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
-                return String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, predefinedSeparators(), currentCharacter, position);
+                errors.add(String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, predefinedSeparators(), currentCharacter, position));
             }
         }
-        return "";
     }
 
     private static String predefinedSeparators() {
@@ -69,7 +77,7 @@ public class StringCalculator {
         return PREDEFINED_SEPARATORS.contains(currentCharacter);
     }
 
-    private static String errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator) {
+    private static void errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator, List<String> errors) {
         String actualNumbers = numbersWithCustomSeparator.actualNumbers;
         String customSeparator = numbersWithCustomSeparator.customSeparator;
         if (hasSingleCharacter(customSeparator)) {
@@ -78,14 +86,13 @@ public class StringCalculator {
                 if (is(customSeparator, currentCharacter)) {
                     Character previousCharacter = actualNumbers.charAt(position - 1);
                     if (is(customSeparator,previousCharacter)) {
-                        return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
+                        errors.add(String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position));
                     }
                 } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
-                    return String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, customSeparator, currentCharacter, position);
+                    errors.add(String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, customSeparator, currentCharacter, position));
                 }
             }
         }
-        return "";
     }
 
     private static boolean hasSingleCharacter(String customSeparator) {
@@ -104,12 +111,13 @@ public class StringCalculator {
         return valueOf(sum(split(numbers)));
     }
 
-    private static String negativeNumbersNotAllowedMsg(String numbers) {
-        return NEGATIVE_NOT_ALLOWED_MSG.formatted(extractNegativeNumbers(numbers));
+    private static void negativeNumbersNotAllowedMsg(String numbers, List<String> errors) {
+        errors.add(NEGATIVE_NOT_ALLOWED_MSG.formatted(extractNegativeNumbers(numbers)));
     }
 
     private static String extractNegativeNumbers(String numbers) {
         return Stream.of(split(numbers))
+                .filter(not(String::isBlank))
                 .map(BigDecimal::new)
                 .filter(StringCalculator::negativeNumber)
                 .map(String::valueOf)
