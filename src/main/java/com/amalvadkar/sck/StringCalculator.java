@@ -25,7 +25,45 @@ public class StringCalculator {
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
         if (hasSingleOrManyNegativeNumber(numbers)) return negativeNumbersNotAllowedMsg(numbers);
 
+        String errorMessage = validate(numbers);
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
+        }
+
         return sum(numbers);
+    }
+
+    private String validate(String numbers) {
+        if (hasCustomSeparator(numbers)) {
+            NumbersWithCustomSeparator numbersWithCustomSeparator = prepareNumbersWithCustomSeparator(numbers);
+            return errorMessageIfAnyInvalidInCaseOfCustomSeparator(numbersWithCustomSeparator);
+        }
+        return errorMessageIfAnyInvalid(numbers);
+    }
+
+    private static String errorMessageIfAnyInvalid(String numbers) {
+        for (int i = 0; i < numbers.length(); i++) {
+            Character currentCharacter = numbers.charAt(i);
+            List<Character> validCharactersInNumbers = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+            if (!validCharactersInNumbers.contains(currentCharacter)) {
+                if (!validCharactersInNumbers.contains(numbers.charAt(i - 1))) {
+                    return String.format("Number expected but '%s' found at position %s.", currentCharacter, i);
+                }
+            }
+        }
+        return "";
+    }
+
+    private static String errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator) {
+        for (int i = 0; i < numbersWithCustomSeparator.actualNumbers.length(); i++) {
+            Character currentCharacter = numbersWithCustomSeparator.actualNumbers.charAt(i);
+            if (numbersWithCustomSeparator.customSeparator.equals(String.valueOf(currentCharacter))) {
+                if (numbersWithCustomSeparator.customSeparator.equals(String.valueOf(numbersWithCustomSeparator.actualNumbers.charAt(i-1)))) {
+                    return String.format("Number expected but '%s' found at position %s.", currentCharacter, i);
+                }
+            }
+        }
+        return "";
     }
 
     private static String sum(String numbers) {
@@ -68,19 +106,19 @@ public class StringCalculator {
     }
 
     private static String[] splitWithCustomSeparator(String numbers) {
+        NumbersWithCustomSeparator numbersWithCustomSeparator = prepareNumbersWithCustomSeparator(numbers);
+        return numbersWithCustomSeparator.actualNumbers().split(handlePredefinedRegexKeyword(numbersWithCustomSeparator.customSeparator()));
+    }
+
+    private static NumbersWithCustomSeparator prepareNumbersWithCustomSeparator(String numbers) {
         List<String> customSeparatorWithNumbers = numbers.lines()
                 .toList();
-        String customSeparator = extractCustomSeparator(customSeparatorWithNumbers);
-        String actualNumbers = extractActualNumbers(customSeparatorWithNumbers);
-        return actualNumbers.split(handlePredefinedRegexKeyword(customSeparator));
+        String customSeparator = customSeparatorWithNumbers.getFirst().substring(2);
+        String actualNumbers = customSeparatorWithNumbers.getLast();
+        return new NumbersWithCustomSeparator(actualNumbers, customSeparator);
     }
 
-    private static String extractActualNumbers(List<String> customSeparatorWithNumbers) {
-        return customSeparatorWithNumbers.getLast();
-    }
-
-    private static String extractCustomSeparator(List<String> customSeparatorWithNumbers) {
-        return customSeparatorWithNumbers.getFirst().substring(2);
+    private record NumbersWithCustomSeparator(String actualNumbers, String customSeparator) {
     }
 
     private static boolean hasCustomSeparator(String numbers) {

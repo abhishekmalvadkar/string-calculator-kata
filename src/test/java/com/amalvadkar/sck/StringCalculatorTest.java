@@ -110,4 +110,11 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("-1.5,2")).isEqualTo("Negative not allowed : -1.5");
         assertThat(stringCalculator.add("2,-4.5,-5.5,-9")).isEqualTo("Negative not allowed : -4.5, -5.5, -9");
     }
+
+    @Test
+    void should_return_error_message_if_separator_is_giving_at_the_position_of_number() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("175.2,\n35")).isEqualTo("Number expected but '\n' found at position 6.");
+    }
 }
