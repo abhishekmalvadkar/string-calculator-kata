@@ -25,35 +25,55 @@ public class StringCalculator {
     private static final String COMMA_WITH_SPACE_SUFFIX = ", ";
     private static final String NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG = "Number expected but '%s' found at position %s.";
     private static final String UNKNOWN_CHARACTER_AT_POSITION_MSG = "'%s' expected but '%s' found at position %s.";
+    private static final String EMPTY_STRING = "";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
-        if (endsWithAllowedSeparator(numbers)) return NUMBER_EXPECTED_BUT_EOF_FOUND_MSG;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
 
-        List<String> errors = validate(numbers);
-        if (!errors.isEmpty()) {
-            return join(NEW_LINE, errors);
+        String error = validate(numbers);
+        if (numbersHaveValidation(error)) {
+            return error;
         }
 
         return sum(numbers);
     }
 
-    private List<String> validate(String numbers) {
+    private static boolean numbersHaveValidation(String error) {
+        return !error.isEmpty();
+    }
+
+    private String validate(String numbers) {
         List<String> errors = new ArrayList<>();
+
+        if (endsWithAllowedSeparator(numbers)) {
+            numberExpectedButEofFoundMessage(errors);
+        }
         if (hasSingleOrManyNegativeNumber(numbers)) {
             negativeNumbersNotAllowedMsg(numbers,errors);
         }
-
         if (hasCustomSeparator(numbers)) {
             errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers), errors);
         } else {
-            errorMessageIfAnyInvalidInCasePredefinedSeparators(numbers, errors);
+            errorMessageIfAnyInvalidInCaseOfPredefinedSeparators(numbers, errors);
         }
-        return errors;
+
+        return exists(errors) ? joinedWithNewLine(errors) : EMPTY_STRING;
     }
 
-    private static void errorMessageIfAnyInvalidInCasePredefinedSeparators(String numbers, List<String> errors) {
+    private static String joinedWithNewLine(List<String> errors) {
+        return join(NEW_LINE, errors);
+    }
+
+    private static boolean exists(List<String> errors) {
+        return !errors.isEmpty();
+    }
+
+    private static void numberExpectedButEofFoundMessage(List<String> errors) {
+        errors.add(NUMBER_EXPECTED_BUT_EOF_FOUND_MSG);
+    }
+
+    private static void errorMessageIfAnyInvalidInCaseOfPredefinedSeparators(String numbers, List<String> errors) {
         for (int position = 0; position < numbers.length(); position++) {
             Character currentCharacter = numbers.charAt(position);
             if (isSeparator(currentCharacter)) {
