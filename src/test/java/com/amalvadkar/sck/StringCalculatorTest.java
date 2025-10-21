@@ -117,4 +117,12 @@ public class StringCalculatorTest {
 
         assertThat(stringCalculator.add("175.2,\n35")).isEqualTo("Number expected but '\n' found at position 6.");
     }
+
+    @Test
+    void should_return_error_message_if_any_unknown_character_coming_at_wrong_position() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("//|\n1|2,3")).isEqualTo("'|' expected but ',' found at position 3.");
+        assertThat(stringCalculator.add("1|2,3")).isEqualTo("',OR\n' expected but '|' found at position 1.");
+    }
 }

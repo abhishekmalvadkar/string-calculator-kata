@@ -10,6 +10,7 @@ import static java.util.stream.Collectors.joining;
 public class StringCalculator {
 
     public static final List<Character> VALID_CHARACTERS_IN_NUMBERS = List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.');
+    public static final List<Character> PREDEFINED_SEPARATORS = List.of(',', '\n');
     private static final String ZERO = "0";
     private static final String COMMA = ",";
     private static final String NEW_LINE = "\n";
@@ -20,6 +21,7 @@ public class StringCalculator {
     private static final String MINUS_SYMBOL = "-";
     private static final String COMMA_WITH_SPACE_SUFFIX = ", ";
     public static final String NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG = "Number expected but '%s' found at position %s.";
+    public static final String UNKNOWN_CHARACTER_AT_POSITION_MSG = "'%s' expected but '%s' found at position %s.";
 
     public String add(String numbers) {
         if (numbers.isEmpty()) return ZERO;
@@ -50,28 +52,48 @@ public class StringCalculator {
                 if (isSeparator(previousCharacter)) {
                     return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
                 }
+            } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
+                return String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, predefinedSeparators(), currentCharacter, position);
             }
         }
         return "";
     }
 
+    private static String predefinedSeparators() {
+        return PREDEFINED_SEPARATORS.stream()
+                .map(String::valueOf)
+                .collect(joining("OR"));
+    }
+
     private static boolean isSeparator(Character currentCharacter) {
-        return !VALID_CHARACTERS_IN_NUMBERS.contains(currentCharacter);
+        return PREDEFINED_SEPARATORS.contains(currentCharacter);
     }
 
     private static String errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator) {
         String actualNumbers = numbersWithCustomSeparator.actualNumbers;
         String customSeparator = numbersWithCustomSeparator.customSeparator;
-        for (int position = 0; position < actualNumbers.length(); position++) {
-            Character currentCharacter = actualNumbers.charAt(position);
-            if (is(customSeparator, currentCharacter)) {
-                Character previousCharacter = actualNumbers.charAt(position - 1);
-                if (is(customSeparator,previousCharacter)) {
-                    return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
+        if (hasSingleCharacter(customSeparator)) {
+            for (int position = 0; position < actualNumbers.length(); position++) {
+                Character currentCharacter = actualNumbers.charAt(position);
+                if (is(customSeparator, currentCharacter)) {
+                    Character previousCharacter = actualNumbers.charAt(position - 1);
+                    if (is(customSeparator,previousCharacter)) {
+                        return String.format(NUMBER_EXPECTED_BUT_NON_NUMBER_FOUND_NSG, currentCharacter, position);
+                    }
+                } else if (isNotFromValidAllowedNumbers(currentCharacter)) {
+                    return String.format(UNKNOWN_CHARACTER_AT_POSITION_MSG, customSeparator, currentCharacter, position);
                 }
             }
         }
         return "";
+    }
+
+    private static boolean hasSingleCharacter(String customSeparator) {
+        return customSeparator.length() == 1;
+    }
+
+    private static boolean isNotFromValidAllowedNumbers(Character currentCharacter) {
+        return !VALID_CHARACTERS_IN_NUMBERS.contains(currentCharacter);
     }
 
     private static boolean is(String customSeparator, Character currentCharacter) {
