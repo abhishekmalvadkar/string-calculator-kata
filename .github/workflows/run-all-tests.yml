@@ -1,4 +1,4 @@
-name: CI
+name: All Tests
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build
+    name: Run All Tests
     runs-on: ubuntu-latest
 
     steps:
