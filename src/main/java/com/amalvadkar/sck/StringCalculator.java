@@ -53,7 +53,7 @@ public class StringCalculator {
             negativeNumbersNotAllowedMsg(numbers,errors);
         }
         if (hasCustomSeparator(numbers)) {
-            errorMessageIfAnyInvalidInCaseOfCustomSeparator(prepareNumbersWithCustomSeparator(numbers), errors);
+            errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator.from(numbers), errors);
         } else {
             errorMessageIfAnyInvalidInCaseOfPredefinedSeparators(numbers, errors);
         }
@@ -98,8 +98,8 @@ public class StringCalculator {
     }
 
     private static void errorMessageIfAnyInvalidInCaseOfCustomSeparator(NumbersWithCustomSeparator numbersWithCustomSeparator, List<String> errors) {
-        String actualNumbers = numbersWithCustomSeparator.actualNumbers;
-        String customSeparator = numbersWithCustomSeparator.customSeparator;
+        String actualNumbers = numbersWithCustomSeparator.actualNumbers();
+        String customSeparator = numbersWithCustomSeparator.customSeparator();
         if (hasSingleCharacter(customSeparator)) {
             for (int position = 0; position < actualNumbers.length(); position++) {
                 Character currentCharacter = actualNumbers.charAt(position);
@@ -168,19 +168,8 @@ public class StringCalculator {
     }
 
     private static String[] splitWithCustomSeparator(String numbers) {
-        NumbersWithCustomSeparator numbersWithCustomSeparator = prepareNumbersWithCustomSeparator(numbers);
+        NumbersWithCustomSeparator numbersWithCustomSeparator = NumbersWithCustomSeparator.from(numbers);
         return numbersWithCustomSeparator.actualNumbers().split(handlePredefinedRegexKeyword(numbersWithCustomSeparator.customSeparator()));
-    }
-
-    private static NumbersWithCustomSeparator prepareNumbersWithCustomSeparator(String numbers) {
-        List<String> customSeparatorWithNumbers = numbers.lines()
-                .toList();
-        String customSeparator = customSeparatorWithNumbers.getFirst().substring(2);
-        String actualNumbers = customSeparatorWithNumbers.getLast();
-        return new NumbersWithCustomSeparator(actualNumbers, customSeparator);
-    }
-
-    private record NumbersWithCustomSeparator(String actualNumbers, String customSeparator) {
     }
 
     private static boolean hasCustomSeparator(String numbers) {
@@ -206,4 +195,5 @@ public class StringCalculator {
     private static boolean hasSingleNumberWithoutSeparator(String numbers) {
         return !numbers.contains(COMMA) && !numbers.contains(NEW_LINE);
     }
+
 }
