@@ -134,4 +134,11 @@ public class StringCalculatorTest {
         assertThat(stringCalculator.add("-1,,2")).isEqualTo("Negative not allowed : -1\nNumber expected but ',' found at position 3.");
         assertThat(stringCalculator.add("-1,,-2")).isEqualTo("Negative not allowed : -1, -2\nNumber expected but ',' found at position 3.");
     }
+
+    @Test
+    void should_return_zero_if_input_is_null() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add(null)).isEqualTo("0");
+    }
 }
