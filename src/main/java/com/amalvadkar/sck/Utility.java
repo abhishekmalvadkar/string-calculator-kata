@@ -8,6 +8,10 @@ public class Utility {
     }
 
     public static boolean isEmptyOrNull(String numbers) {
-        return isNull(numbers) || numbers.isEmpty();
+        return isNull(numbers) || hasSingleOrManyWhiteSpaces(numbers);
+    }
+
+    private static boolean hasSingleOrManyWhiteSpaces(String numbers) {
+        return numbers.trim().isEmpty();
     }
 }

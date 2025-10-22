@@ -141,4 +141,11 @@ public class StringCalculatorTest {
 
         assertThat(stringCalculator.add(null)).isEqualTo("0");
     }
+
+    @Test
+    void should_return_zero_if_input_is_lot_of_whitespaces() {
+        StringCalculator stringCalculator = new StringCalculator();
+
+        assertThat(stringCalculator.add("                            ")).isEqualTo("0");
+    }
 }
