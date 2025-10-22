@@ -1,17 +1,17 @@
 package com.amalvadkar.sck;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import static com.amalvadkar.sck.Splitter.split;
+import static com.amalvadkar.sck.Utility.isEmptyOrNull;
 import static com.amalvadkar.sck.Validator.validate;
 import static java.lang.String.valueOf;
 
 public class StringCalculator {
 
     public String add(String numbers) {
-        if (Objects.isNull(numbers) || numbers.isEmpty()) return Constants.ZERO;
+        if (isEmptyOrNull(numbers)) return Constants.ZERO;
         if (hasSingleNumberWithoutSeparator(numbers)) return numbers;
 
         String error = validate(numbers);
