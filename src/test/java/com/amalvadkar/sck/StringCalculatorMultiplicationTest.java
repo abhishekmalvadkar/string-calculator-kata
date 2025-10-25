@@ -30,7 +30,7 @@ public class StringCalculatorMultiplicationTest {
     }
 
     @Test
-    void should_return_sum_if_input_is_two_numbers_separated_by_comma() {
+    void should_return_multiplication_if_input_is_two_numbers_separated_by_comma() {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.multiply("1,2")).isEqualTo("2");
@@ -40,7 +40,7 @@ public class StringCalculatorMultiplicationTest {
     }
 
     @Test
-    void should_return_sum_if_input_is_two_numbers_and_it_involved_decimal_number_separated_by_comma() {
+    void should_return_multiplication_if_input_is_two_numbers_and_it_involved_decimal_number_separated_by_comma() {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.multiply("1.1,2.2")).isEqualTo("2.42");
@@ -49,7 +49,7 @@ public class StringCalculatorMultiplicationTest {
     }
 
     @Test
-    void should_return_sum_if_input_is_multiple_int_numbers_separated_by_comma() {
+    void should_return_multiplication_if_input_is_multiple_int_numbers_separated_by_comma() {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.multiply("1,2,3")).isEqualTo("6");
@@ -58,7 +58,7 @@ public class StringCalculatorMultiplicationTest {
     }
 
     @Test
-    void should_return_sum_if_input_is_multiple_decimal_numbers_separated_by_comma() {
+    void should_return_multiplication_if_input_is_multiple_decimal_numbers_separated_by_comma() {
         StringCalculator stringCalculator = new StringCalculator();
 
         assertThat(stringCalculator.multiply("1.1,2.2,3.3")).isEqualTo("7.986");
