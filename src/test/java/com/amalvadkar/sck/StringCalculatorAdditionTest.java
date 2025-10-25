@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class StringCalculatorTest {
+public class StringCalculatorAdditionTest {
 
     @Test
     void should_return_zero_if_input_is_empty_string() {
